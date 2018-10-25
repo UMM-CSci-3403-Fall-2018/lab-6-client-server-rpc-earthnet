@@ -62,8 +62,10 @@ public class ExchangeRateReader {
         String url = baseURL + year + "-" + monthStr + "-" + dayStr + "?access_key=";
         URL xrReader = new URL(url);
         InputStream inputStream = xrReader.openStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        System.out.println(reader.readLine());
 
-        float result = 0;
+        float result = 9f;
         return result;
 
         // throw new UnsupportedOperationException();
@@ -95,3 +97,4 @@ public class ExchangeRateReader {
         throw new UnsupportedOperationException();
     }
 }
+
