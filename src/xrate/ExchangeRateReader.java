@@ -1,6 +1,10 @@
 package xrate;
 
+import java.net.*;
+import java.io.*;
+
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Provide access to basic currency exchange rate services.
@@ -20,14 +24,11 @@ public class ExchangeRateReader {
      * @param baseURL
      *            the base URL for requests
      */
+
+    private String baseURL;
+
     public ExchangeRateReader(String baseURL) {
-        // TODO Your code here
-        /*
-         * DON'T DO MUCH HERE!
-         * People often try to do a lot here, but the action is actually in
-         * the two methods below. All you need to do here is store the
-         * provided `baseURL` in a field so it will be accessible later.
-         */
+        this.baseURL = baseURL;
     }
 
     /**
@@ -47,7 +48,27 @@ public class ExchangeRateReader {
      */
     public float getExchangeRate(String currencyCode, int year, int month, int day) throws IOException {
         // TODO Your code here
-        throw new UnsupportedOperationException();
+
+        String monthStr = Integer.toString(month);
+        String dayStr = Integer.toString(day);
+
+        if (day < 10) {
+            dayStr = "0" + dayStr;
+        }
+        if (month < 10) {
+            monthStr = "0" + monthStr;
+        }
+
+        String url = baseURL + year + "-" + monthStr + "-" + dayStr + "?access_key=";
+        URL xrReader = new URL(url);
+        InputStream inputStream = xrReader.openStream();
+
+        float result = 0;
+        return result;
+
+        // throw new UnsupportedOperationException();
+
+
     }
 
     /**
