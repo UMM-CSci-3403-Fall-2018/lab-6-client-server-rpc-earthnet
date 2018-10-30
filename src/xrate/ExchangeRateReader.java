@@ -1,22 +1,17 @@
 package xrate;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import jdk.nashorn.internal.parser.JSONParser;
-
 import java.io.*;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Properties;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Provide access to basic currency exchange rate services.
  * 
- * @author earthnet
+ * @author earthnet (Mark and John H.)
  */
 public class ExchangeRateReader {
 
@@ -81,7 +76,6 @@ public class ExchangeRateReader {
      * @throws IOException
      */
     public float getExchangeRate(String currencyCode, int year, int month, int day) throws IOException {
-        // TODO Your code here
 
         String monthStr = Integer.toString(month);
         String dayStr = Integer.toString(day);
@@ -98,12 +92,10 @@ public class ExchangeRateReader {
         InputStream inputStream = xrReader.openStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-        JsonObject reader2 = new JsonParser().parse(reader).getAsJsonObject();
-        JsonObject rate = reader2.getAsJsonObject().get("rates").getAsJsonObject();
-        float curr = rate.getAsJsonObject().get(currencyCode).getAsFloat();
-        System.out.println("the currency value is " + curr);
-        return curr;
+        JsonObject jsonObject = new JsonParser().parse(reader).getAsJsonObject();
+        JsonObject rate = jsonObject.getAsJsonObject().get("rates").getAsJsonObject();
 
+        return rate.getAsJsonObject().get(currencyCode).getAsFloat();
 
     }
 
@@ -127,8 +119,30 @@ public class ExchangeRateReader {
     public float getExchangeRate(
             String fromCurrency, String toCurrency,
             int year, int month, int day) throws IOException {
-        // TODO Your code here
-        throw new UnsupportedOperationException();
+
+        String monthStr = Integer.toString(month);
+        String dayStr = Integer.toString(day);
+
+        if (day < 10) {
+            dayStr = "0" + dayStr;
+        }
+        if (month < 10) {
+            monthStr = "0" + monthStr;
+        }
+
+        String url = baseURL + year + "-" + monthStr + "-" + dayStr + "?access_key=" + accessKey;
+        URL xrReader = new URL(url);
+        InputStream inputStream = xrReader.openStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        JsonObject jsonObject = new JsonParser().parse(reader).getAsJsonObject();
+        JsonObject rate = jsonObject.getAsJsonObject().get("rates").getAsJsonObject();
+
+        float from = rate.getAsJsonObject().get(fromCurrency).getAsFloat();
+        float to = rate.getAsJsonObject().get(toCurrency).getAsFloat();
+
+        return from / to;
+
     }
 }
 
